@@ -2,6 +2,7 @@ package com.iterium.serverless;
 
 import com.iterium.serverless.data.DatabaseUtil;
 import com.iterium.serverless.data.OracleMonitor;
+import com.iterium.serverless.utils.OrderAccVerifier;
 import org.apache.log4j.Logger;
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -22,6 +23,9 @@ public class Monitor implements RequestHandler<Object, String> {
 			int res = monitor.getTotalRecords(connection);
 			logger.info("Total: " + res);
 			dbUtil.release();
+
+			OrderAccVerifier verifier = new OrderAccVerifier();
+			verifier.verifyQuantity(res);
 		}
 		return "ok";
 	}

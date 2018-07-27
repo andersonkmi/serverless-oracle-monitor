@@ -24,8 +24,13 @@ provider:
     CONNECTION_STRING: jdbc:oracle:thin:@localhost:1521:orcl
     USER: admin
     PASSWORD: password
-    SNS_TOPIC: arn:aws:sns:us-east-1:970221509170:ecommerce-monitoring
+    SNS_TOPIC: arn:aws:sns:us-east-1:970221509170:monitoring
     QUERY: SELECT COUNT(*) FROM MY_TABLE
+    WARNING_THRESHOLD: "10"
+    WARNING_MESSAGE: "WARNING - quantidade de pedidos para processar:"
+    CRITICAL_THRESHOLD: "20"
+    CRITICAL_MESSAGE: "CRITICAL - quantidade de pedidos para processar:"
+
   iamRoleStatements:
   -  Effect: "Allow"
      Action:
@@ -49,6 +54,6 @@ functions:
   oracle-monitor:
     handler: com.iterium.serverless.Monitor
     events:
-    - schedule: rate(1 minute)
+    - schedule: rate(15 minutes)
     memorySize: 512
     timeout: 30
