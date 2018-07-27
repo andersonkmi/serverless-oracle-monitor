@@ -13,17 +13,16 @@ public class OracleMonitor {
     private static final Logger logger = Logger.getLogger(OracleMonitor.class);
 
     public int getTotalRecords(Connection connection) {
-        String query = System.getProperty(QUERY);
-        try (Statement statement = connection.createStatement()) {
+        logger.info("calling get total records");
+        String query = System.getenv(QUERY);
+        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = statement.executeQuery(query);
-            if(rs.next()) {
-                int total = rs.getInt("QUANITDADE");
-                return total;
-            } else {
-                return 0;
-            }
+            rs.last();
+            int total = rs.getInt(1);
+            logger.info("Total: " + total);
+            return total;
         } catch (SQLException exception) {
-            logger.error(exception.getMessage());
+            logger.error("Exception: " + exception.getMessage());
         }
         return 0;
     }

@@ -11,8 +11,8 @@
 #
 # Happy Coding!
 
-service: sys-monitor
-
+service: sys-monit
+# sg-2ca0545c
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
@@ -21,16 +21,26 @@ provider:
   name: aws
   runtime: java8
   environment:
-    CONNECTION_STRING: CONN_STRING
-    USER: master
+    CONNECTION_STRING: jdbc:oracle:thin:@localhost:1521:orcl
+    USER: admin
     PASSWORD: password
     SNS_TOPIC: arn:aws:sns:us-east-1:970221509170:ecommerce-monitoring
-    QUERY: SELECT COUNT(1) AS QUANTIDADE FROM MY_TABLE
+    QUERY: SELECT COUNT(*) FROM MY_TABLE
   iamRoleStatements:
   -  Effect: "Allow"
      Action:
      - "sns:publish"
      Resource: "arn:aws:sns:us-east-1:*:*"
+  #vpc:
+  #  subnetIds:
+  #    - subnet-2b0e2063
+  #    - subnet-64071458
+  #    - subnet-66c9bc4a
+  #    - subnet-b21b77e8
+  #    - subnet-ba7484de
+  #    - subnet-d9067bd5
+  #  securityGroupIds:
+  #    - sg-2ca0545c
 
 package:
   artifact: build/distributions/sys-monitor.zip
@@ -40,3 +50,5 @@ functions:
     handler: com.iterium.serverless.Monitor
     events:
     - schedule: rate(1 minute)
+    memorySize: 512
+    timeout: 30
