@@ -21,7 +21,7 @@ dependencies {
 
 // Task for building the zip file for upload
 task buildZip(type: Zip) {
-    baseName = "sys-monitor"
+    baseName = "serverless-oracle-monitor"
     from compileJava
     from processResources
     into('lib') {
